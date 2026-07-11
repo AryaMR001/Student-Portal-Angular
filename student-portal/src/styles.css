@@ -1,1 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/azure-blue.css';
+
+.pointer {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.pointer:hover {
+  opacity: 0.7; /* Adds a nice "dimming" effect on hover */
+}/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Ensures the document root fills the screen */
+  font-size: 14px;
+  font-family: system-ui;
+}
+.btn-primary {
+    background: #7be21496;
+    text-align: center;
+    color: black;
+    border-color: #7be21496;
+    font-size: 14px;
+}
+.nav-link  {
+  color: #7be21496;
+}
+.nav-pills .nav-link.active {
+  background-color: #7be21496;
+}
+link:hover {
+  color: #7be21496;
+}
+.icon-blue{
+  color: #3264dbd6;
+}
+

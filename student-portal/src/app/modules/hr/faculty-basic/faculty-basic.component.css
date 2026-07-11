@@ -1,0 +1,10 @@
+/* Ensure the dropdown menu appears above everything else */
+.mat-mdc-select-panel {
+    z-index: 1060 !important; /* Bootstrap modals usually have a z-index of 1055 */
+}
+
+/* Ensure your form labels don't get squashed */
+.modal-body {
+    position: relative;
+    overflow-y: auto; /* Allows scrolling if the form is too long */
+}

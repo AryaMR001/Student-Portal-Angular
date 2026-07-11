@@ -1,0 +1,160 @@
+<div class="container mt-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <p class="mb-0">Overview of all active Faculty.</p>
+
+    <button class="btn btn-primary" (click)="addFaculty()">
+      + Add Faculty
+    </button>
+  </div>
+
+  <!-- Table -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Courses Handled</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (faculty of faculties; track $index) {
+        <tr>
+
+          <td>{{ faculty.name }}</td>
+          <td>{{ faculty.department }}</td>
+            <td>
+                @for (course of faculty.courses_Handled; track $index) {
+                {{ course }} @if ($index < faculty.courses_Handled.length - 1) {<span>, </span>
+                }   
+                }
+          </td>
+          <td>
+            <i class="bi bi-pencil-square pointer me-3 icon-blue" (click)="editFaculty(faculty.id)">Edit</i>
+            <i class="bi bi-eye icon-blue pointer me-3" (click)="viewFaculty(faculty.id)">View</i>
+            <i class="bi bi-trash pointer text-danger" (click)="deleteFaculty(faculty.id)">Delete</i>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+</div>
+
+<!-- MODERN MODAL -->
+@if (isModalOpen) {
+  <div class="modal d-block fade show"
+       tabindex="-1"
+       style="background: rgba(0,0,0,0.5);">
+
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+
+        <!-- Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Add Faculty</h5>
+          <button class="btn-close" (click)="isModalOpen = false"></button>
+        </div>
+
+        <!-- Body -->
+       <div class="modal-body">
+  <form [formGroup]="facultyForm" (ngSubmit)="saveFaculty()">
+    
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Name</label>
+        <input class="form-control" formControlName="name" [ngClass]="{'is-invalid': facultyForm.get('name')?.invalid && (facultyForm.get('name')?.touched || facultyForm.get('name')?.dirty)}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Date of Birth</label>
+        <input type="date" class="form-control" formControlName="dob" [ngClass]="{'is-invalid': facultyForm.get('dob')?.invalid && (facultyForm.get('dob')?.touched || facultyForm.get('dob')?.dirty)}" >
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Date of Joining</label>
+        <input type="date" class="form-control" formControlName="doj" [ngClass]="{'is-invalid': facultyForm.get('doj')?.invalid && (facultyForm.get('doj')?.touched || facultyForm.get('doj')?.dirty)}" >
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Highest Qualification</label>
+        <input class="form-control" formControlName="highest_qualification" [ngClass]="{'is-invalid': facultyForm.get('highest_qualification')?.invalid && (facultyForm.get('highest_qualification')?.touched || facultyForm.get('highest_qualification')?.dirty)}">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Years of Experience</label>
+        <input type="number" class="form-control" formControlName="years_of_experience" [ngClass]="{'is-invalid': facultyForm.get('years_of_experience')?.invalid && (facultyForm.get('years_of_experience')?.touched || facultyForm.get('years_of_experience')?.dirty)}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Phone</label>
+        <input class="form-control" formControlName="phone" [ngClass]="{'is-invalid': facultyForm.get('phone')?.invalid && (facultyForm.get('phone')?.touched || facultyForm.get('phone')?.dirty)}">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" formControlName="email" [ngClass]="{'is-invalid': facultyForm.get('email')?.invalid && (facultyForm.get('email')?.touched || facultyForm.get('email')?.dirty)}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Department</label>
+        <select class="form-select" formControlName="department" [ngClass]="{'is-invalid': facultyForm.get('department')?.invalid && (facultyForm.get('department')?.touched || facultyForm.get('department')?.dirty)}">
+            @for (item of departmentDropdown; track $index) {
+                <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Courses Handled</mat-label>
+                <mat-select formControlName="courses_Handled" multiple>
+                    @for (course of courseDropdown; track course.id) {
+                    <mat-option [value]="course.id">
+                        {{ course.name }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Address</label>
+      <textarea class="form-control" formControlName="address"></textarea>
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit" [disabled]="facultyForm.invalid">
+      Save
+    </button>
+  </form>
+</div>
+
+      </div>
+
+    </div>
+  </div>
+}
+@if (isViewModalOpen) {
+  <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">View Faculty</h5>
+          <button type="button" class="btn-close" (click)="isViewModalOpen = false"></button>
+        </div>
+        
+        <app-view-modal />
+        
+      </div>
+    </div>
+  </div>
+}
