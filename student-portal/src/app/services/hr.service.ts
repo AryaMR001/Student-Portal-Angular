@@ -54,4 +54,22 @@ export class HrService {
   getSingleFaculty(id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/v1/hr/faculty/${id}/`);
   }
+  getFacultyExperiance() {
+    return this.http.get(`${this.baseUrl}/api/v1/hr/faculty-experaince-detail/`);
+  }
+  createFacultyExperiance(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/v1/hr/faculty-experaince/`, data);
+  }
+  deleteFacultyExperiance(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/api/v1/hr/faculty-experaince/${id}/`);
+  }
+  updateFacultyExperiance(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/api/v1/hr/faculty-experaince/${id}/`, data);
+  } 
+  getSingleExperiance(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/v1/hr/faculty-experaince/${id}/`);
+  } 
+  facultyDropdown(){
+    return this.http.get(`${this.baseUrl}/api/v1/hr/faculty-dropdown/`)
+  }
 }

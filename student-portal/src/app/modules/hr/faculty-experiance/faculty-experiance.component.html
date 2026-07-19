@@ -1,1 +1,110 @@
-<p>faculty-experiance works!</p>
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="mb-0">Overview of all active Faculties experience.</p>
+        <button class="btn btn-primary" (click)="addFacultyExperiance()">
+            + Add Faculty Experience
+        </button>
+    </div>
+
+    <!-- Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>ID</th>
+                <th>Previous Institution</th>
+                <th>Position</th>
+                <th>Duration</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (faculty of faculties(); track faculty.id) {
+            <tr>
+                <td>{{ faculty.faculty }}</td>
+                <td>{{ faculty.fac_id }}</td>
+                <td>{{ faculty.previous_institution }}</td>
+                <td>{{ faculty.position }}</td>
+                <td>{{ faculty.start_date }} - {{ faculty.end_date }}</td>
+                <td>
+                    <i class="bi bi-pencil-square pointer me-3 icon-blue" (click)="editFaculty(faculty.id)">Edit</i>
+                    <i class="bi bi-eye icon-blue pointer me-3" (click)="viewFaculty(faculty.id)">View</i>
+                    <i class="bi bi-trash pointer text-danger" (click)="deleteFaculty(faculty.id)">Delete</i>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- ADD FACULTY MODAL -->
+@if (isModalOpen()) {
+<div class="modal d-block fade show" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Add Faculty</h5>
+                <button class="btn-close" (click)="isModalOpen.set(false)"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <form [formGroup]="facultyForm" (ngSubmit)="saveFaculty()">
+                    <!-- Faculty Dropdown -->
+                    <div class="mb-3">
+                        <label class="form-label">Faculty</label>
+                        <select class="form-select" formControlName="faculty" [class.is-invalid]="hasError('faculty')">
+                            <option value="">Select Faculty</option>
+                            @for (item of facultyDropdown(); track item.id) {
+                            <option [value]="item.id">{{ item.name }}</option>
+                            }
+                        </select>
+                        @if (hasError('faculty')) { <div class="invalid-feedback">Faculty is required</div> }
+                    </div>
+
+                    <div class="row">
+                        <!-- Previous Institution -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Previous Institution</label>
+                            <input class="form-control" formControlName="previous_institution"
+                                [class.is-invalid]="hasError('previous_institution')">
+                            @if (hasError('previous_institution')) { <div class="invalid-feedback">Previous institution
+                                is required</div> }
+                        </div>
+
+                        <!-- Position -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Position</label>
+                            <input class="form-control" formControlName="position"
+                                [class.is-invalid]="hasError('position')">
+                            @if (hasError('position')) { <div class="invalid-feedback">Position is required</div> }
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Start Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-control" formControlName="start_date"
+                                [class.is-invalid]="hasError('start_date')">
+                            @if (hasError('start_date')) { <div class="invalid-feedback">Start date is required</div> }
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-control" formControlName="end_date"
+                                [class.is-invalid]="hasError('end_date')">
+                            @if (hasError('end_date')) { <div class="invalid-feedback">End date is required</div> }
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-100" type="submit" [disabled]="facultyForm.invalid">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+}

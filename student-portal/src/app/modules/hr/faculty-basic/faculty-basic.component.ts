@@ -8,13 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ViewModal } from '../../../components/shared/view-modal/view-modal.component';
 @Component({
   selector: 'app-faculty-basic',
-  imports: [
-    ReactiveFormsModule, 
-    CommonModule,
-     MatSelectModule, 
-     MatFormFieldModule, 
-     ViewModal
-    ],
+  imports: [ReactiveFormsModule, CommonModule, MatSelectModule, MatFormFieldModule, ViewModal],
   templateUrl: './faculty-basic.component.html',
   styleUrl: './faculty-basic.component.css',
 })
@@ -25,8 +19,8 @@ export class FacultyBasic implements OnInit {
   selectedFaculty: any = null;
   courseDropdown: any[] = [];
   departmentDropdown: any[] = [];
+  id = 0;
   facultyForm: FormGroup = new FormGroup({
-    
     name: new FormControl('', Validators.required),
     dob: new FormControl('', [Validators.required]),
     doj: new FormControl('', [Validators.required]),
@@ -36,10 +30,13 @@ export class FacultyBasic implements OnInit {
     courses_Handled: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
     phone: new FormControl('', [Validators.required, Validators.pattern(/^\d{10}$/)]),
-    department: new FormControl('', Validators.required)
+    department: new FormControl('', Validators.required),
   });
 
-  constructor(private hrService: HrService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private hrService: HrService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.loadFaculties();
@@ -54,7 +51,7 @@ export class FacultyBasic implements OnInit {
       error: (err) => {
         console.error(err);
         this.faculties = [];
-      }
+      },
     });
   }
 
@@ -68,13 +65,39 @@ export class FacultyBasic implements OnInit {
   }
 
   saveFaculty() {
+    console.log("this.facultyForm",this.facultyForm.invalid)
     if (this.facultyForm.invalid) return;
 
     const facultyData = this.facultyForm.value;
+    if( this.id == 0){
+
+      this.hrService.createFaculty(facultyData).subscribe((res:any)=>{
+        this.isModalOpen = false
+         this.loadFaculties()
+  
+      })
+    }
+    else{
+      this.hrService.updateFaculty(this.id,facultyData).subscribe((res:any)=>{
+        this.isModalOpen = false
+         this.loadFaculties()
+  
+      })
+    }
   }
-  editFaculty(faculty: any) {
-    this.facultyForm.patchValue(faculty);
-    this.isModalOpen = true;
+  editFaculty(id: number) {
+    this.id = id;
+    if (this.departmentDropdown.length == 0) this.getDeptDropdown();
+    if (this.courseDropdown.length == 0) this.getCourseDropdown();
+    // Optional: Reset form to clear previous data
+    this.facultyForm.reset();
+
+    this.hrService.getSingleFaculty(id).subscribe((res: any) => {
+      this.facultyForm.patchValue(res);
+      this.isModalOpen = true;
+    });
+    this.cdr.detectChanges();
+
   }
 
   deleteFaculty(id: number) {
@@ -85,17 +108,17 @@ export class FacultyBasic implements OnInit {
         },
         error: (err) => {
           console.error(err);
-        }
+        },
       });
     }
   }
   addFaculty() {
     this.facultyForm.reset();
+    this.id = 0
+
     this.isModalOpen = true;
-    if (this.departmentDropdown.length==0) 
-    this.getDeptDropdown();
-    if (this.courseDropdown.length==0)
-    this.getCourseDropdown();
+    if (this.departmentDropdown.length == 0) this.getDeptDropdown();
+    if (this.courseDropdown.length == 0) this.getCourseDropdown();
   }
   viewFaculty(id: number) {
     this.hrService.getSingleFaculty(id).subscribe({
@@ -106,14 +129,14 @@ export class FacultyBasic implements OnInit {
       },
       error: (err) => {
         console.error(err);
-      }
+      },
     });
   }
   closeViewModal() {
     this.isViewModalOpen = false;
     this.selectedFaculty = null;
   }
-   
+
   getDeptDropdown() {
     this.hrService.getDeptDropdown().subscribe({
       next: (res: any) => {
@@ -123,7 +146,7 @@ export class FacultyBasic implements OnInit {
       error: (err) => {
         console.error(err);
         this.departmentDropdown = [];
-      }
+      },
     });
   }
   getCourseDropdown() {
@@ -135,7 +158,7 @@ export class FacultyBasic implements OnInit {
       error: (err) => {
         console.error(err);
         this.courseDropdown = [];
-      }
+      },
     });
   }
 }
