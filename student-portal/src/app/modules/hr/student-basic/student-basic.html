@@ -1,1 +1,458 @@
-<p>student-basic works!</p>
+<div class="container mt-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <p class="mb-0">Overview of all active Students.</p>
+
+    <button class="btn btn-primary" (click)="addStudent()">
+      + Add Student
+    </button>
+  </div>
+
+  <!-- Table -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Course</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+     @for (student of students(); track student.stud_id) {
+
+        <tr>
+          <td>{{ student.stud_id }}</td>
+          <td>{{ student.name }}</td>
+          <td>{{ student.department }}</td>
+          <td>{{ student.course }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.phone_number }}</td>
+
+          <td>
+            <i
+              class="bi bi-pencil-square pointer me-3 icon-blue"
+              (click)="editStudent(student.id)">
+              Edit
+            </i>
+
+            <i
+              class="bi bi-eye icon-blue pointer me-3"
+              (click)="viewStudent(student.id)">
+              View
+            </i>
+
+            <i
+              class="bi bi-trash pointer text-danger"
+              (click)="deleteStudent(student.id)">
+              Delete
+            </i>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+</div>
+
+
+<!-- ADD / EDIT STUDENT MODAL -->
+@if (isModalOpen()) {
+  <div
+    class="modal d-block fade show"
+    tabindex="-1"
+    style="background: rgba(0,0,0,0.5);">
+
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+
+        <!-- Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {{ id() ? 'Edit Student' : 'Add Student' }}
+          </h5>
+
+          <button
+            type="button"
+            class="btn-close"
+            (click)="isModalOpen.set(false)">
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+
+          <form
+            [formGroup]="studentForm"
+            (ngSubmit)="saveStudent()">
+
+            <!-- Name / DOB -->
+            <div class="row">
+
+              <!-- Name -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  Name
+                </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="name"
+                  [ngClass]="{
+                    'is-invalid':
+                      studentForm.get('name')?.invalid &&
+                      (
+                        studentForm.get('name')?.touched ||
+                        studentForm.get('name')?.dirty
+                      )
+                  }">
+
+                @if (
+                  studentForm.get('name')?.invalid &&
+                  (
+                    studentForm.get('name')?.touched ||
+                    studentForm.get('name')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Name is required.
+                  </div>
+                }
+              </div>
+
+              <!-- DOB -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  Date of Birth
+                </label>
+
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="dob"
+                  [ngClass]="{
+                    'is-invalid':
+                      studentForm.get('dob')?.invalid &&
+                      (
+                        studentForm.get('dob')?.touched ||
+                        studentForm.get('dob')?.dirty
+                      )
+                  }">
+
+                @if (
+                  studentForm.get('dob')?.invalid &&
+                  (
+                    studentForm.get('dob')?.touched ||
+                    studentForm.get('dob')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Date of birth is required.
+                  </div>
+                }
+              </div>
+
+            </div>
+
+
+            <!-- Department / Course -->
+            <div class="row">
+
+              <!-- Department -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  Department
+                </label>
+
+                <select
+                  class="form-select"
+                  formControlName="department"
+                  [ngClass]="{
+                    'is-invalid':
+                      studentForm.get('department')?.invalid &&
+                      (
+                        studentForm.get('department')?.touched ||
+                        studentForm.get('department')?.dirty
+                      )
+                  }">
+
+                  <option value="">
+                    Select Department
+                  </option>
+
+                  @for (
+                    item of departmentDropdown();
+                    track item.id
+                  ) {
+                    <option [value]="item.id">
+                      {{ item.name }}
+                    </option>
+                  }
+
+                </select>
+
+                @if (
+                  studentForm.get('department')?.invalid &&
+                  (
+                    studentForm.get('department')?.touched ||
+                    studentForm.get('department')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Department is required.
+                  </div>
+                }
+              </div>
+
+
+              <!-- Course -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  Course
+                </label>
+
+                <select
+                  class="form-select"
+                  formControlName="course"
+                  [ngClass]="{
+                    'is-invalid':
+                      studentForm.get('course')?.invalid &&
+                      (
+                        studentForm.get('course')?.touched ||
+                        studentForm.get('course')?.dirty
+                      )
+                  }">
+
+                  <option value="">
+                    Select Course
+                  </option>
+
+                  @for (
+                    item of courseDropdown();
+                    track item.id
+                  ) {
+                    <option [value]="item.id">
+                      {{ item.name }}
+                    </option>
+                  }
+
+                </select>
+
+                @if (
+                  studentForm.get('course')?.invalid &&
+                  (
+                    studentForm.get('course')?.touched ||
+                    studentForm.get('course')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Course is required.
+                  </div>
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- DOJ / Email -->
+            <div class="row">
+
+              <!-- Date of Joining -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  Date of Joining
+                </label>
+
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="doj"
+                  [ngClass]="{
+                    'is-invalid':
+                      studentForm.get('doj')?.invalid &&
+                      (
+                        studentForm.get('doj')?.touched ||
+                        studentForm.get('doj')?.dirty
+                      )
+                  }">
+
+                @if (
+                  studentForm.get('doj')?.invalid &&
+                  (
+                    studentForm.get('doj')?.touched ||
+                    studentForm.get('doj')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Date of joining is required.
+                  </div>
+                }
+
+              </div>
+
+
+              <!-- Email -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  Email
+                </label>
+
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  [ngClass]="{
+                    'is-invalid':
+                      studentForm.get('email')?.invalid &&
+                      (
+                        studentForm.get('email')?.touched ||
+                        studentForm.get('email')?.dirty
+                      )
+                  }">
+
+                @if (
+                  studentForm.get('email')?.hasError('required') &&
+                  (
+                    studentForm.get('email')?.touched ||
+                    studentForm.get('email')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Email is required.
+                  </div>
+                }
+
+                @if (
+                  studentForm.get('email')?.hasError('email') &&
+                  (
+                    studentForm.get('email')?.touched ||
+                    studentForm.get('email')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Enter a valid email address.
+                  </div>
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- Phone -->
+            <div class="row">
+
+              <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                  Phone Number
+                </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="phone_number"
+                  maxlength="10"
+                  inputmode="numeric"
+                  [ngClass]="{
+                    'is-invalid':
+                      studentForm.get('phone_number')?.invalid &&
+                      (
+                        studentForm.get('phone_number')?.touched ||
+                        studentForm.get('phone_number')?.dirty
+                      )
+                  }">
+
+                @if (
+                  studentForm.get('phone_number')?.hasError('required') &&
+                  (
+                    studentForm.get('phone_number')?.touched ||
+                    studentForm.get('phone_number')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Phone number is required.
+                  </div>
+                }
+
+                @if (
+                  studentForm.get('phone_number')?.hasError('pattern') &&
+                  (
+                    studentForm.get('phone_number')?.touched ||
+                    studentForm.get('phone_number')?.dirty
+                  )
+                ) {
+                  <div class="invalid-feedback">
+                    Phone number must contain exactly 10 digits.
+                  </div>
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- Submit -->
+            <button
+              class="btn btn-primary w-100"
+              type="submit"
+              [disabled]="studentForm.invalid">
+
+              {{ isEditMode() ? 'Update Student' : 'Save Student' }}
+
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+}
+
+
+<!-- VIEW STUDENT MODAL -->
+@if (isViewModalOpen()) {
+
+  <div
+    class="modal d-block"
+    tabindex="-1"
+    style="background: rgba(0,0,0,0.5)">
+
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+
+        <div class="modal-header">
+
+          <h5 class="modal-title">
+            View Student
+          </h5>
+
+          <button
+            type="button"
+            class="btn-close"
+            (click)="isViewModalOpen.set(false)">
+          </button>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+}

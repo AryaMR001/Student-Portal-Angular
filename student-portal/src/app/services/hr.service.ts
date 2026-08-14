@@ -47,7 +47,7 @@ export class HrService {
   }
   updateFaculty(id: number, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/api/v1/hr/faculty/${id}/`, data);
-  } 
+  }
   getCourseDropdown() {
     return this.http.get(`${this.baseUrl}/api/v1/hr/course-dropdown/`);
   }
@@ -65,11 +65,26 @@ export class HrService {
   }
   updateFacultyExperiance(id: number, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/api/v1/hr/faculty-experaince/${id}/`, data);
-  } 
+  }
   getSingleExperiance(id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/v1/hr/faculty-experaince/${id}/`);
-  } 
+  }
   facultyDropdown(){
     return this.http.get(`${this.baseUrl}/api/v1/hr/faculty-dropdown/`)
+  }
+  getStudent() {
+    return this.http.get(`${this.baseUrl}/api/v1/hr/student-detail/`);
+  }
+  createStudent(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/v1/hr/student/`, data);
+  }
+  deleteStudent(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/api/v1/hr/student/${id}/`);
+  }
+  updateStudent(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/api/v1/hr/student/${id}/`, data);
+  }
+  getSingleStudent(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/v1/hr/student/${id}/`);
   }
 }
